@@ -1,15 +1,21 @@
 import { initializeApp } from 'firebase/app';
-import { getAuth, signInAnonymously, onAuthStateChanged } from 'firebase/auth';
+import {
+  getAuth,
+  onAuthStateChanged,
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+  signOut,
+} from 'firebase/auth';
 import { getFirestore, collection, addDoc } from 'firebase/firestore';
 
 // Firebase configuration
 const firebaseConfig = {
-  apiKey: '',
-  authDomain: '',
-  projectId: '',
-  storageBucket: '',
-  messagingSenderId: '',
-  appId: '',
+  apiKey: import.meta.env.VITE_FIREBASE_API_KEY || '',
+  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN || '',
+  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID || '',
+  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET || '',
+  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID || '',
+  appId: import.meta.env.VITE_FIREBASE_APP_ID || '',
 };
 
 let auth, db;
@@ -27,9 +33,25 @@ export { auth, db };
 // Firebase helper functions
 export const initializeFirebaseAuth = (onUserChange) => {
   if (auth) {
-    signInAnonymously(auth).catch(console.error);
     onAuthStateChanged(auth, onUserChange);
+  } else {
+    onUserChange(null);
   }
+};
+
+export const signUpWithEmail = async (email, password) => {
+  if (!auth) throw new Error('Firebase not configured');
+  return createUserWithEmailAndPassword(auth, email, password);
+};
+
+export const signInWithEmail = async (email, password) => {
+  if (!auth) throw new Error('Firebase not configured');
+  return signInWithEmailAndPassword(auth, email, password);
+};
+
+export const signOutUser = async () => {
+  if (!auth) throw new Error('Firebase not configured');
+  return signOut(auth);
 };
 
 export const saveBattleResult = async (user, result, difficulty) => {

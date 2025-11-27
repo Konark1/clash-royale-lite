@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { GAME_WIDTH, GAME_HEIGHT, FPS, UNITS, DECK } from './config/constants';
-import { initializeFirebaseAuth, saveBattleResult } from './config/firebase';
+import { initializeFirebaseAuth, saveBattleResult, signOutUser } from './config/firebase';
 import { MenuScreen } from './screens/MenuScreen';
 import { CardsScreen } from './screens/CardsScreen';
 import { ShopScreen } from './screens/ShopScreen';
@@ -13,6 +13,7 @@ import { updateTowerAttacks, updateUnitMovement, updateUnitAttacks } from './gam
 import { updateProjectiles, updateGameState, checkGameEnd } from './gameLogic/physics';
 import { executeAiMove } from './gameLogic/aiLogic';
 import { calculateStars, determineWinnerByStars, checkKingTowerDestroyed } from './gameLogic/scoringSystem';
+import { AuthModal } from './components/AuthModal';
 
 export default function App() {
   const [user, setUser] = useState(null);
@@ -33,10 +34,30 @@ export default function App() {
 
   const [renderTrigger, setRenderTrigger] = useState(0);
   const [gameResult, setGameResult] = useState(null);
+  const [boardScale, setBoardScale] = useState(1);
+  const [showAuthModal, setShowAuthModal] = useState(false);
 
   // Initialize Firebase
   useEffect(() => {
-    initializeFirebaseAuth(setUser);
+    initializeFirebaseAuth((firebaseUser) => {
+      setUser(firebaseUser);
+      setShowAuthModal(!firebaseUser);
+    });
+  }, []);
+
+  useEffect(() => {
+    const updateScale = () => {
+      const padding = 24;
+      const availableWidth = window.innerWidth - padding;
+      const availableHeight = window.innerHeight - padding;
+      const scaleX = availableWidth / GAME_WIDTH;
+      const scaleY = availableHeight / GAME_HEIGHT;
+      setBoardScale(Math.min(scaleX, scaleY, 1));
+    };
+
+    updateScale();
+    window.addEventListener('resize', updateScale);
+    return () => window.removeEventListener('resize', updateScale);
   }, []);
 
   // Game loop and AI
@@ -162,8 +183,28 @@ export default function App() {
 
   // Main render
   return (
-    <div className="min-h-screen bg-black flex items-center justify-center font-sans select-none">
-      <div style={{ width: GAME_WIDTH, height: GAME_HEIGHT }} className="relative bg-[#3c6a94] overflow-hidden shadow-2xl border-4 border-black">
+    <div className="min-h-screen bg-[#02060f] flex items-center justify-center font-sans select-none p-2">
+      <div
+        className="relative"
+        style={{ width: GAME_WIDTH * boardScale, height: GAME_HEIGHT * boardScale }}
+      >
+        <div
+          style={{
+            width: GAME_WIDTH,
+            height: GAME_HEIGHT,
+            transform: `scale(${boardScale})`,
+            transformOrigin: 'top left',
+          }}
+          className="absolute top-0 left-0 bg-[#3c6a94] overflow-hidden shadow-2xl border-4 border-black rounded-[32px]"
+        >
+          <div className="absolute top-4 right-4 z-50 flex gap-2">
+            <button
+              onClick={() => (user ? signOutUser() : setShowAuthModal(true))}
+              className="px-3 py-1 rounded-full text-xs font-bold uppercase tracking-widest bg-black/50 text-white border border-white/30 hover:bg-black/70 transition-colors"
+            >
+              {user ? 'Sign Out' : 'Log In'}
+            </button>
+          </div>
         {/* GLOBAL LIGHTING */}
         <div className="absolute inset-0 pointer-events-none z-50 bg-gradient-to-tr from-blue-900/10 via-transparent to-yellow-500/10 mix-blend-overlay"></div>
 
@@ -242,7 +283,10 @@ export default function App() {
         {gameState === 'GAMEOVER' && (
           <GameOverScreen result={gameResult} onReturn={() => setGameState('MENU')} towersRef={towersRef} />
         )}
+        </div>
       </div>
+
+      <AuthModal isOpen={showAuthModal} onClose={() => user && setShowAuthModal(false)} onSuccess={() => setShowAuthModal(false)} />
     </div>
   );
 }
