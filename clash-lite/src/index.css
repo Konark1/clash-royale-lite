@@ -1,0 +1,12 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  background-color: #000;
+  color: white;
+  margin: 0;
+  overflow: hidden; /* This stops the page from scrolling on mobile */
+  font-family: system-ui, -apple-system, sans-serif;
+  user-select: none; /* Prevents highlighting text while playing */
+}
