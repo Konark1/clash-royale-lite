@@ -9,6 +9,7 @@ import giantImg from '../assets/cards/Giant.png';
 import musketeerImg from '../assets/cards/Musketeer.png';
 import pekkaImg from '../assets/cards/PEKKA.png';
 import minionsImg from '../assets/cards/Minion.jpg';
+import fireballImg from '../assets/cards/Fireball.jpg';
 
 export const CardsScreen = ({ onBattleClick, onShopClick, onClansClick }) => {
   const troops = [
@@ -19,6 +20,8 @@ export const CardsScreen = ({ onBattleClick, onShopClick, onClansClick }) => {
     { key: 'MUSKETEER', rarity: 'rare', description: 'Powerful ranged unit', image: musketeerImg },
     { key: 'PEKKA', rarity: 'epic', description: 'Legendary tank unit', image: pekkaImg },
     { key: 'MINIONS', rarity: 'common', description: 'Flying attackers', image: minionsImg },
+    { key: 'FIREBALL', rarity: 'common', description: 'Fire attack', image: FireballImg },
+
   ];
 
   const getRarityColor = (rarity) => {
