@@ -20,7 +20,7 @@ export const AuthModal = ({ isOpen, onClose, onSuccess }) => {
   };
 
   const validate = () => {
-    if (!email.trim()) return 'Email is required';
+    if (!email.trim()) return 'Email is require';
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return 'Enter a valid email';
     if (password.length < 6) return 'Password must be at least 6 characters';
     if (mode === 'signup' && password !== confirmPassword) return 'Passwords do not match';
