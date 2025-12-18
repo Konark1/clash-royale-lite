@@ -40,11 +40,11 @@ export const FPS = 30;
 export const UNITS = {
   PRINCESS_TOWER: {
     name: 'Princess Tower',
-    hp: 2534,
-    dmg: 90,
+    hp: 2500,
+    dmg: 100,
     speed: 0, // Stationary
     color: 'bg-gray-300',
-    range: 220, // TOWER_RANGE
+    range: 200, // TOWER_RANGE
     type: 'building',
     attackType: 'RANGED',
     projectile: 'ARROW',
@@ -54,11 +54,11 @@ export const UNITS = {
 
   KING_TOWER: {
     name: 'King Tower',
-    hp: 4008,
-    dmg: 90,
+    hp: 4200,
+    dmg: 100,
     speed: 0, // Stationary
     color: 'bg-gray-400',
-    range: 250, // Slightly longer range than Princess
+    range: 200, // Slightly longer range than Princess
     type: 'building',
     attackType: 'RANGED',
     projectile: 'CANNONBALL',
@@ -96,7 +96,7 @@ export const UNITS = {
 
   PEKKA: { 
     name: 'P.E.K.K.A', 
-    cost: 7, 
+    cost: 6, 
     hp: 3000, // Tank
     dmg: 600, // High damage
     speed: 1, // Slow

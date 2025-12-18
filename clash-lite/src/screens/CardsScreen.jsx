@@ -20,8 +20,7 @@ export const CardsScreen = ({ onBattleClick, onShopClick, onClansClick }) => {
     { key: 'MUSKETEER', rarity: 'rare', description: 'Powerful ranged unit', image: musketeerImg },
     { key: 'PEKKA', rarity: 'epic', description: 'Legendary tank unit', image: pekkaImg },
     { key: 'MINIONS', rarity: 'common', description: 'Flying attackers', image: minionsImg },
-    { key: 'FIREBALL', rarity: 'common', description: 'Fire attack', image: FireballImg },
-
+    { key: 'FIREBALL', rarity: 'common', description: 'Fire attack', image: fireballImg },
   ];
 
   const getRarityColor = (rarity) => {
